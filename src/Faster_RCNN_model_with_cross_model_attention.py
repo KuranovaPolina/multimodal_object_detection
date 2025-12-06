@@ -6,6 +6,9 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 
 from torchvision.models.resnet import resnet50
+from torchvision.models.detection.rpn import AnchorGenerator
+from torchvision.models.detection import FasterRCNN
+from torchvision.ops import MultiScaleRoIAlign
 
 from torchvision.ops.feature_pyramid_network import FeaturePyramidNetwork, LastLevelMaxPool
 
@@ -13,11 +16,11 @@ import cv2
 import numpy as np
 
 class RGBDDetectionDataset(Dataset):
-    def __init__(self, samples, img_size, DEPTH_MIN, DEPTH_MAX):
+    def __init__(self, samples, img_size, depth_min, depth_max):
         self.samples = samples
         self.img_size = img_size
-        self.DEPTH_MIN = DEPTH_MIN
-        self.DEPTH_MAX = DEPTH_MAX
+        self.depth_min = depth_min
+        self.depth_max = depth_max
 
     def __len__(self):
         return len(self.samples)
@@ -33,8 +36,8 @@ class RGBDDetectionDataset(Dataset):
         depth = cv2.imread(item["depth"], cv2.IMREAD_ANYDEPTH).astype(np.float32)
         depth = cv2.resize(depth, (self.img_size, self.img_size))
 
-        d = np.clip(depth, self.DEPTH_MIN, self.DEPTH_MAX)
-        d_norm = (d - self.DEPTH_MIN) / (self.DEPTH_MAX - self.DEPTH_MIN + 1e-6)  # [0,1]
+        d = np.clip(depth, self.depth_min, self.depth_max)
+        d_norm = (d - self.depth_min) / (self.depth_max - self.depth_min + 1e-6)  # [0,1]
 
         depth_ch = d_norm[..., None]  # (H,W,1)
 
@@ -189,4 +192,35 @@ class RGBD_Backbone(nn.Module):
 
         feats = self.fpn({"0": C2, "1": C3, "2": C4, "3": C5})
         return feats
+
+def Faster_RCNN_model_with_cross_model_attention(device, classes):
+    num_classes_with_bg = len(classes) + 1
+
+    backbone = RGBD_Backbone().to(device)
+
+    # FPN produces 5 maps: P2, P3, P4, P5, P6
+    anchor_generator = AnchorGenerator(
+        sizes=((32,), (64,), (128,), (256,), (512,)),
+        aspect_ratios=((0.5, 1.0, 2.0),) * 5,
+    )
+
+    roi_pooler = MultiScaleRoIAlign(
+        featmap_names=["0", "1", "2", "3", "pool"],  # 5 levels
+        output_size=7,
+        sampling_ratio=2,
+    )
+
+    model = FasterRCNN(
+        backbone,
+        num_classes=num_classes_with_bg,
+        rpn_anchor_generator=anchor_generator,
+        box_roi_pool=roi_pooler,
+        # 4 канала → 4 mean/std
+        image_mean=[0.5, 0.5, 0.5, 0.5],
+        image_std=[0.25, 0.25, 0.25, 0.25],
+    ).to(device)
+
+    print("Модель Faster R-CNN + Cross-Modal Attention (8x8) создана.")
+
+    return model
 

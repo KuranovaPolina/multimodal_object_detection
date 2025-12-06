@@ -1,6 +1,4 @@
 import os
-import cv2
-import numpy as np
 
 from glob import glob
 
@@ -8,7 +6,7 @@ def load_classes(path):
     with open(path, "r") as f:
         return [line.strip() for line in f.readlines() if line.strip()]
     
-def read_yolo_label(classes, label_path):
+def read_label(classes, label_path):
     objects = []
     with open(label_path, "r") as f:
         for line in f:
@@ -57,7 +55,7 @@ def collect_samples(classes, base_path):
             if not os.path.exists(label_path):
                 continue
 
-            objs = read_yolo_label(label_path)
+            objs = read_label(classes, label_path)
             if len(objs) == 0:
                 continue
 
@@ -70,28 +68,3 @@ def collect_samples(classes, base_path):
                 }
             )
     return samples
-
-def compute_depth_min_max(samples):
-    d_min = float("inf")
-    d_max = float("-inf")
-
-    for s in samples:
-        depth = cv2.imread(s["depth"], cv2.IMREAD_ANYDEPTH).astype(np.float32)
-        if depth.size == 0:
-            continue
-        m = depth.min()
-        M = depth.max()
-        if M <= 0:
-            continue
-        d_min = min(d_min, m)
-        d_max = max(d_max, M)
-
-    if not np.isfinite(d_min):
-        d_min = 0.0
-    if not np.isfinite(d_max) or d_max <= d_min:
-        d_max = d_min + 1.0
-    return d_min, d_max
-
-def collate_fn(batch):
-    images, targets = list(zip(*batch))
-    return list(images), list(targets)
