@@ -29,6 +29,3 @@ def train(model, train_loader, device, epochs = 10):
             n_batches += 1
 
         print(f"Epoch {epoch}/{epochs} | train_loss = {total_loss / n_batches:.4f}")
-
-    torch.save(model.state_dict(), "rgbd_fasterrcnn_crossmodal_8x8.pth")
-    print("Model saved: rgbd_fasterrcnn_crossmodal_8x8.pth")

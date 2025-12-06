@@ -24,7 +24,7 @@ def show_n_predictions(model, samples, classes, depth_min, depth_max, img_size, 
         d = np.clip(depth, depth_min, depth_max)
         d_norm = (d - depth_min) / (depth_max - depth_min + 1e-6)
 
-        depth_ch = d_norm[..., None]  # [0,1]
+        depth_ch = d_norm[..., None] 
 
         rgbd = np.concatenate([rgb.astype(np.float32) / 255.0, depth_ch], axis=2)
         rgbd_t = torch.from_numpy(rgbd).permute(2, 0, 1).float().to(device)
