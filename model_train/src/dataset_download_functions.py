@@ -27,14 +27,18 @@ def read_label(classes, label_path):
             )
     return objects
 
-def collect_samples(classes, base_path):
+def collect_samples(classes, base_path, USE_MIDAS):
     samples = []
     subfolders = sorted([f for f in os.listdir(base_path) if f.isdigit()])
 
     for folder in subfolders:
         img_dir = os.path.join(base_path, folder, "images")
-        depth_dir = os.path.join(base_path, folder, "depth")
         label_dir = os.path.join(base_path, folder, "labels")
+
+        if USE_MIDAS:
+            depth_dir = os.path.join(base_path, folder, "depth_assesment")
+        else: 
+            depth_dir = os.path.join(base_path, folder, "depth")
 
         if not (
             os.path.isdir(img_dir)
@@ -50,9 +54,7 @@ def collect_samples(classes, base_path):
             depth_path = os.path.join(depth_dir, fname)
             label_path = os.path.join(label_dir, fname.replace(".png", ".txt"))
 
-            if not os.path.exists(depth_path):
-                continue
-            if not os.path.exists(label_path):
+            if not os.path.exists(depth_path) or not os.path.exists(label_path):
                 continue
 
             objs = read_label(classes, label_path)

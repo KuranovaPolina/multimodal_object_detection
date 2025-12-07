@@ -1,6 +1,6 @@
 import torch
 
-from cfg.config import IMG_SIZE, BASE_PATH, CLASSES_PATH, MODEL, EPOCHS
+from cfg.config import IMG_SIZE, BASE_PATH, CLASSES_PATH, MODEL, EPOCHS, USE_MIDAS
 from src.dataset_download_functions import load_classes, collect_samples
 from src.dataset_process_functions import compute_depth_min_max, train_val_split
 from src.models import Faster_RCNN_model_with_cross_model_attention, Faster_RCNN_model
@@ -14,7 +14,7 @@ if __name__ == "__main__":
     classes = load_classes(CLASSES_PATH)
     print("Classes:", classes)
 
-    samples = collect_samples(classes, BASE_PATH)
+    samples = collect_samples(classes, BASE_PATH, USE_MIDAS)
     print("Number of valid samples:", len(samples))
 
     depth_min, depth_max = compute_depth_min_max(samples)
