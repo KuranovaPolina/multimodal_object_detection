@@ -50,7 +50,7 @@ def predict_rgbd_sample(classes, rgb, depth, model, img_size, depth_min, depth_m
 def predict_rgbdd_sample(classes, rgb, depth, m_depth, model, img_size, depth_min, depth_max, device, score_thresh=0.5):
     rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB).astype(np.uint8)
     dR = depth.astype(np.uint8)
-    dM = m_depth.astype(np.float32)
+    dM = m_depth
 
     h0, w0 = rgb.shape[:2]
 
