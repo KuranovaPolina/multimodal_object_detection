@@ -3,8 +3,7 @@ import torch
 
 import torch.nn.functional as F
 
-from torchvision.models.resnet import resnet50
-from torchvision.models.detection.backbone_utils import resnet_fpn_backbone
+from torchvision.models.resnet import resnet50, ResNet50_Weights
 from torchvision.models.detection.rpn import AnchorGenerator
 from torchvision.models.detection import FasterRCNN
 from torchvision.ops import MultiScaleRoIAlign
@@ -44,7 +43,7 @@ class CrossModalAttention(nn.Module):
     def forward(self, F_rgb, F_d):
         B, C, H, W = F_rgb.shape
 
-        R = self.pool_rgb(F_rgb)
+        R = self.pool_rgb(F_rgb) 
         D = self.pool_d(F_d) 
 
         Q = self.q_rgb(R)
@@ -62,23 +61,21 @@ class CrossModalAttention(nn.Module):
         A = torch.softmax(A, dim=-1)
 
         F_att_flat = torch.bmm(Vf, A.transpose(1, 2))
-        F_att_small = F_att_flat.view(B, C, h, w)   
+        F_att_small = F_att_flat.view(B, C, h, w)
 
         F_att = F.interpolate(F_att_small, size=(H, W), mode="bilinear", align_corners=False)
 
         fused = self.alpha * F_att + (1.0 - self.alpha) * F_rgb
         return fused
-    
+
 class RGBD_Backbone(nn.Module):
-    def __init__(self):
+    def __init__(self, trainable_layers=5):
         super().__init__()
 
         self.rgb_stem = ConvStem(in_channels=3)
         self.depth_stem = ConvStem(in_channels=1)
-
         self.fusion = CrossModalAttention(channels=64, attn_size=8)
-
-        self.body = resnet50(weights=None)
+        self.body = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
 
         self.body.conv1 = nn.Conv2d(
             64,
@@ -96,23 +93,17 @@ class RGBD_Backbone(nn.Module):
 
         self.out_channels = 256
         self.fpn = FeaturePyramidNetwork(
-            in_channels_list=[
-                256,   
-                512,   
-                1024,  
-                2048, 
-            ],
+            in_channels_list=[ 256, 512, 1024, 2048,],
             out_channels=self.out_channels,
-            extra_blocks=LastLevelMaxPool(),
-        )
-
+            extra_blocks=LastLevelMaxPool(),)
+        
     def forward(self, x):
         rgb = x[:, :3, :, :]
         depth = x[:, 3:, :, :]
 
         F_rgb = self.rgb_stem(rgb)
         F_d = self.depth_stem(depth)
-
+        
         F_fused = self.fusion(F_rgb, F_d)
 
         x = self.body.conv1(F_fused)
@@ -128,9 +119,7 @@ class RGBD_Backbone(nn.Module):
         feats = self.fpn({"0": C2, "1": C3, "2": C4, "3": C5})
         return feats
 
-def Faster_RCNN_model_with_cross_model_attention(device, classes):
-    num_classes_with_bg = len(classes) + 1
-
+def rgbd_attention_model(device, num_classes_with_bg):
     backbone = RGBD_Backbone().to(device)
 
     anchor_generator = AnchorGenerator(
@@ -153,32 +142,6 @@ def Faster_RCNN_model_with_cross_model_attention(device, classes):
         image_std=[0.25, 0.25, 0.25, 0.25],
     ).to(device)
 
-    print("Model Faster R-CNN + Cross-Modal Attention (8x8) created")
-
-    return model
-
-def Faster_RCNN_model(device, classes):
-    num_classes_with_bg = len(classes) + 1
-
-    backbone = resnet_fpn_backbone('resnet50', weights=None, trainable_layers=5)
-    old_conv = backbone.body.conv1
-
-    backbone.body.conv1 = nn.Conv2d(
-        in_channels=4,
-        out_channels=old_conv.out_channels,
-        kernel_size=old_conv.kernel_size,
-        stride=old_conv.stride,
-        padding=old_conv.padding,
-        bias=(old_conv.bias is not None),
-    )
-
-    model = FasterRCNN(
-        backbone,
-        num_classes=num_classes_with_bg,
-        image_mean=[0.5, 0.5, 0.5, 0.5],
-        image_std=[0.25, 0.25, 0.25, 0.25],
-    ).to(device)
-
-    print("Model Faster R-CNN RGBD created.")
+    print("Model Faster R-CNN RGBD with attention created")
 
     return model
