@@ -4,7 +4,7 @@ import torch
 import time
 import pyrealsense2 as rs
 
-from cfg.config import CLASSES_PATH, MODEL_PATH, IMG_SIZE, MODEL, DEPTH_MIN, DEPTH_MAX
+from config.config import CLASSES_PATH, MODEL_PATH, IMG_SIZE, MODEL, DEPTH_MIN, DEPTH_MAX
 from src.dataset_download_functions import load_classes
 from src.rgbd_base_model import rgbd_base_model
 from src.rgbd_attention_model import rgbd_attention_model
