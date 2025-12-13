@@ -1,5 +1,4 @@
-BASE_PATH="/Users/polinakuranova/.cache/kagglehub/datasets/radmilasegen/dataset/versions/1/new_ds"
-CLASSES_PATH = BASE_PATH + "/merged_classes.txt"
+CLASSES_PATH = "models/merged_classes.txt"
 
 MODEL_PATH = "/Users/polinakuranova/uni/ML_in_robotics/multimodal_object_detection/weights/30_epochs/rgbdd_fasterrcnn_gating.pth"
 
