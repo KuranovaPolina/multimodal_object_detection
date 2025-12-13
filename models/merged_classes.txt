@@ -1,0 +1,11 @@
+bottle
+box
+cola
+container
+cube
+duck
+pods
+scissors
+sphere
+tape
+tor
