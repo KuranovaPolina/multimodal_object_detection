@@ -150,7 +150,7 @@ $$
 
 CMA реализуется через механизм кросс-внимания: признаки одной модальности используются для выборки релевантной информации из других модальностей. Полученные межмодальные признаки объединяются с исходными с помощью residual-соединений, формируя единый тензор признаков, который затем подаётся на стандартный пайплайн Faster R-CNN (ResNet-50, FPN, RPN, ROI Align и детекторную голову).
 
-<img width="2882" height="870" alt="image" src="https://github.com/user-attachments/assets/3ae61d62-4641-4bb6-86c5-1c4b5f90a517" />
+<img width="3782" height="610" alt="image" src="https://github.com/user-attachments/assets/a1576738-52e8-4989-80fa-61326d0ae671" />
 
 ![rgbdd_attention 1](https://github.com/user-attachments/assets/9037e8d4-7cb1-48a6-a428-2532208d002d)
 
