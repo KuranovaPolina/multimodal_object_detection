@@ -72,7 +72,8 @@ FPN формирует карты признаков (набор), что поз
 
 https://github.com/user-attachments/assets/2214ab7a-4a11-4f6e-846e-50de80d9b9f4
 
-![base](https://github.com/user-attachments/assets/89045e41-422e-44f1-a3ec-d653f53b55cc)
+![base1](https://github.com/user-attachments/assets/f926534f-cbc3-4cdc-95ea-e31d2c0a790f)
+
 
 <img width="2497" height="882" alt="image" src="https://github.com/user-attachments/assets/d3df0f48-c2b0-4648-9335-5fa3ebb43f32" />
 
@@ -137,11 +138,21 @@ Gating-модель достигает сбалансированного соо
 
 ## Демонстрация работы
 
-*TODO*
+Модель 1:
 
-ссылка на видео
+![base1](https://github.com/user-attachments/assets/699ea9be-5d76-4a70-9690-c0a819b14ae4)
 
-gif анимация
+Модель 2:
+
+![gating_model 5](https://github.com/user-attachments/assets/c8edcb27-134d-4684-83ea-8f71ce5f2899)
+
+Модель 3:
+
+![rgbdd_gating_model 2](https://github.com/user-attachments/assets/0eeda377-f3ad-4c70-b167-24a91651bfb2)
+
+Модель 4:
+
+![rgbdd_attention 2](https://github.com/user-attachments/assets/d8b81f8e-9eda-4d87-b257-546c570c4262)
 
 ## Устанока и развертывание
 
