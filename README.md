@@ -72,8 +72,7 @@ FPN формирует карты признаков (набор), что поз
 
 https://github.com/user-attachments/assets/2214ab7a-4a11-4f6e-846e-50de80d9b9f4
 
-
-
+![base](https://github.com/user-attachments/assets/89045e41-422e-44f1-a3ec-d653f53b55cc)
 
 <img width="2497" height="882" alt="image" src="https://github.com/user-attachments/assets/d3df0f48-c2b0-4648-9335-5fa3ebb43f32" />
 
@@ -82,15 +81,21 @@ https://github.com/user-attachments/assets/2214ab7a-4a11-4f6e-846e-50de80d9b9f4
 
 <img width="2530" height="875" alt="image" src="https://github.com/user-attachments/assets/707eb262-4bff-4a83-9216-42a6b6bda84f" />
 
+![gating_model 1](https://github.com/user-attachments/assets/c59eed18-97b4-4d09-af87-42685157af05)
+
 #### Модель 3: 5-ти канальная модель с механизмом гейтирования (rgbdd_gating_model)
 Второй этап модификации добавляет в архитектуру пятый канал данных - оцененную глубину, синтезированную с помощью нейросети Midas. Смысл добавления этих данных заключается в том, что реальная глубина может быть сильно зашумлена или же пропускать объекты из-за их дальнего расположения от камеры, или при наличии в сценах светоотражающих или светопропускающих поверхностей. В таких случаях оцененная глубина сможет заменить реальную, а также очертить границы объектов. 
 
 <img width="2890" height="885" alt="image" src="https://github.com/user-attachments/assets/3bf6dbe4-0b99-4ddb-9019-449e512796bd" />
 
+![rgbdd_gating_model 1](https://github.com/user-attachments/assets/0f8303dd-b8de-4c1e-be0b-ea79653617e7)
+
 #### Модель 4: 5-ти канальная модель с механизмом внимания (rgbdd_attention_model)
 В третьем этапе модификации был реализован механизм attention, который, в отличии от gating, формирует зависимость между весами rgb, реальной глубины и оцененной глубины. Что позволит модели выбирать наиболее информативный источник данных, что поможет детекции в сценах с сильными перекрытиями(окклюзиями) объектов.
 
 <img width="2882" height="870" alt="image" src="https://github.com/user-attachments/assets/3ae61d62-4641-4bb6-86c5-1c4b5f90a517" />
+
+![rgbdd_attention 1](https://github.com/user-attachments/assets/9037e8d4-7cb1-48a6-a428-2532208d002d)
 
 В процессе экспериментов обучение моделей производилось на 30 эпохах.
 
