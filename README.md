@@ -162,7 +162,7 @@ $$
 
 Таким образом, формула реализует gating-механизм, позволяющий адаптивно регулировать влияние усиленных признаков в зависимости от контекста входных данных.
 
-<img width="2530" height="875" alt="image" src="https://github.com/user-attachments/assets/707eb262-4bff-4a83-9216-42a6b6bda84f" />
+<img width="3727" height="705" alt="image" src="https://github.com/user-attachments/assets/27bdab4b-45d6-48fe-993e-6d28050ebf16" />
 
 ![gating_model 1](https://github.com/user-attachments/assets/c59eed18-97b4-4d09-af87-42685157af05)
 
