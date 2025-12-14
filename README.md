@@ -70,10 +70,7 @@ print("Path to dataset files:", path)
 На выходах FPN применяется Region Proposal Network (RPN), предназначенная для генерации кандидатов областей, потенциально содержащих объекты. Дальнейшие этапы Faster R-CNN включают уточнение регионов и классификацию объектов.
 FPN формирует карты признаков (набор), что позволяет повысить эффективность детекции объектов разных размеров. Далее применяется RPN (Region Proposal Network). 
 
-https://github.com/user-attachments/assets/2214ab7a-4a11-4f6e-846e-50de80d9b9f4
-
 ![base1](https://github.com/user-attachments/assets/f926534f-cbc3-4cdc-95ea-e31d2c0a790f)
-
 
 <img width="2497" height="882" alt="image" src="https://github.com/user-attachments/assets/d3df0f48-c2b0-4648-9335-5fa3ebb43f32" />
 
